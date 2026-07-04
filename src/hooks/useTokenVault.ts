@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import {
 	createTokenAccount,
+	legacyTokenStorageKeys,
 	mergeTokenAccounts,
 	parseTokenBackup,
 	type TokenAccount,
@@ -40,7 +41,12 @@ export function useTokenVault() {
 	const [hasLoadedAccounts, setHasLoadedAccounts] = useState(false);
 
 	useEffect(() => {
-		const saved = window.localStorage.getItem(tokenStorageKey);
+		const saved =
+			window.localStorage.getItem(tokenStorageKey) ??
+			legacyTokenStorageKeys
+				.map((key) => window.localStorage.getItem(key))
+				.find((value): value is string => value !== null);
+
 		if (!saved) {
 			setHasLoadedAccounts(true);
 			return;
@@ -63,6 +69,9 @@ export function useTokenVault() {
 		}
 
 		window.localStorage.setItem(tokenStorageKey, JSON.stringify(accounts));
+		for (const key of legacyTokenStorageKeys) {
+			window.localStorage.removeItem(key);
+		}
 	}, [accounts, hasLoadedAccounts]);
 
 	useEffect(() => {
@@ -182,7 +191,7 @@ export function useTokenVault() {
 		const url = URL.createObjectURL(blob);
 		const anchor = document.createElement("a");
 		anchor.href = url;
-		anchor.download = "pulseguard-2fa-backup.json";
+		anchor.download = "2fa-manager-backup.json";
 		anchor.click();
 		URL.revokeObjectURL(url);
 	}

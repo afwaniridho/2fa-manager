@@ -14,12 +14,12 @@ export const Route = createRootRoute({
 				content: "width=device-width, initial-scale=1",
 			},
 			{
-				title: "PulseGuard 2FA",
+				title: "2FA Manager",
 			},
 			{
 				name: "description",
 				content:
-					"A private client-side TOTP authenticator with real-time 2FA codes.",
+					"2FA Manager is a private client-side TOTP authenticator with real-time 2FA codes.",
 			},
 		],
 	}),

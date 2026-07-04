@@ -1,5 +1,5 @@
 {
-	"name": "2fa",
+	"name": "2fa-manager",
 	"private": true,
 	"type": "module",
 	"imports": {

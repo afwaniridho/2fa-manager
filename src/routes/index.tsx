@@ -55,7 +55,7 @@ function Home() {
 						</div>
 						<div>
 							<p className="eyebrow">Private authenticator</p>
-							<h1>PulseGuard 2FA</h1>
+							<h1>2FA Manager</h1>
 						</div>
 					</div>
 					<div className="header-actions">

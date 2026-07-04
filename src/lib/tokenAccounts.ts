@@ -19,7 +19,8 @@ export type TokenFormInput = {
 	algorithm: TotpAlgorithm;
 };
 
-export const tokenStorageKey = "pulseguard.tokens.v1";
+export const tokenStorageKey = "2fa-manager.tokens.v1";
+export const legacyTokenStorageKeys = ["pulseguard.tokens.v1"];
 
 export function createTokenAccount(
 	input: ParsedOtpAuthUri,
