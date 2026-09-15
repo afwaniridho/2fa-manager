@@ -38,7 +38,18 @@ export function useTokenVault() {
 	const [showSecret, setShowSecret] = useState(false);
 	const [copiedId, setCopiedId] = useState<string | null>(null);
 	const [message, setMessage] = useState("");
+	const [deletedAccount, setDeletedAccount] = useState<TokenAccount | null>(
+		null,
+	);
 	const [hasLoadedAccounts, setHasLoadedAccounts] = useState(false);
+
+	useEffect(() => {
+		if (!message) {
+			return;
+		}
+		const timer = window.setTimeout(() => setMessage(""), 3200);
+		return () => window.clearTimeout(timer);
+	}, [message]);
 
 	useEffect(() => {
 		const saved =
@@ -137,7 +148,7 @@ export function useTokenVault() {
 		setForm((current) => ({ ...current, [key]: value }));
 	}
 
-	function addAccount() {
+	function addAccount(): boolean {
 		try {
 			const account = createTokenAccount(tokenInputFromForm(form, otpUri));
 
@@ -145,11 +156,13 @@ export function useTokenVault() {
 			setSelectedId(account.id);
 			setForm(defaultTokenForm);
 			setOtpUri("");
-			setMessage(`${account.issuer} was added.`);
+			setMessage(`${account.issuer} was added successfully.`);
+			return true;
 		} catch (error) {
 			setMessage(
 				error instanceof Error ? error.message : "Token could not be added.",
 			);
+			return false;
 		}
 	}
 
@@ -174,7 +187,31 @@ export function useTokenVault() {
 		}
 	}
 
+	async function copyText(text: string, label = "Text") {
+		if (!text) {
+			return false;
+		}
+		try {
+			await navigator.clipboard.writeText(text);
+			setMessage(`${label} copied to clipboard.`);
+			return true;
+		} catch {
+			setMessage(`Could not copy ${label.toLowerCase()}.`);
+			return false;
+		}
+	}
+
+	function clearMessage() {
+		setMessage("");
+	}
+
 	function removeAccount(id: string) {
+		const target = accounts.find((item) => item.id === id);
+		if (!target) {
+			return;
+		}
+
+		setDeletedAccount(target);
 		setAccounts((current) => current.filter((item) => item.id !== id));
 		setSelectedId((current) => {
 			if (current !== id) {
@@ -182,6 +219,18 @@ export function useTokenVault() {
 			}
 			return accounts.find((item) => item.id !== id)?.id ?? null;
 		});
+		setMessage(`${target.issuer} token deleted.`);
+	}
+
+	function undoDelete() {
+		if (!deletedAccount) {
+			return;
+		}
+		const toRestore = deletedAccount;
+		setAccounts((current) => [toRestore, ...current]);
+		setSelectedId(toRestore.id);
+		setDeletedAccount(null);
+		setMessage(`${toRestore.issuer} restored.`);
 	}
 
 	function exportAccounts() {
@@ -225,7 +274,9 @@ export function useTokenVault() {
 		selectedCode,
 		showSecret,
 		addAccount,
+		clearMessage,
 		copyCode,
+		copyText,
 		exportAccounts,
 		generateSecret,
 		removeAccount,
@@ -233,6 +284,8 @@ export function useTokenVault() {
 		setQuery,
 		setSelectedId,
 		setShowSecret,
+		deletedAccount,
+		undoDelete,
 		updateForm,
 	};
 }
