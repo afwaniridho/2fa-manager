@@ -10,6 +10,12 @@
 		"nodejs_compat"
 	],
 	"main": "@tanstack/react-start/server-entry",
+	"routes": [
+		{
+			"pattern": "2fa-manager.ridhoafwani.dev",
+			"custom_domain": true
+		}
+	],
 	"observability": {
 		"enabled": true
 	},

@@ -1,4 +1,5 @@
 import {
+	decodeBase32,
 	normalizeSecret,
 	type ParsedOtpAuthUri,
 	parseOtpAuthUri,
@@ -26,11 +27,14 @@ export function createTokenAccount(
 	input: ParsedOtpAuthUri,
 	now = Date.now(),
 ): TokenAccount {
+	const normalized = normalizeSecret(input.secret);
+	decodeBase32(normalized);
+
 	return {
 		id: crypto.randomUUID(),
 		issuer: input.issuer,
 		account: input.account,
-		secret: normalizeSecret(input.secret),
+		secret: normalized,
 		period: input.period,
 		digits: input.digits,
 		algorithm: input.algorithm,

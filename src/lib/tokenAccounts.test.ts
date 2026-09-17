@@ -37,6 +37,30 @@ describe("tokenAccounts", () => {
 		});
 	});
 
+	it("rejects empty or invalid base32 secrets when creating accounts", () => {
+		expect(() =>
+			createTokenAccount({
+				issuer: "Bad",
+				account: "test",
+				secret: "",
+				period: 30,
+				digits: 6,
+				algorithm: "SHA-1",
+			}),
+		).toThrow("Secret is required");
+
+		expect(() =>
+			createTokenAccount({
+				issuer: "Bad",
+				account: "test",
+				secret: "INVALID1890",
+				period: 30,
+				digits: 6,
+				algorithm: "SHA-1",
+			}),
+		).toThrow("Secret must be valid Base32");
+	});
+
 	it("converts manual form fields into token input defaults", () => {
 		expect(
 			tokenInputFromForm(
