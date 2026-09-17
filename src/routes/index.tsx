@@ -209,7 +209,7 @@ function Home() {
 							<div className="brand-badge-row">
 								<span className="secure-badge">
 									<span className="secure-dot" />
-									Local encrypted vault
+									Browser TOTP authenticator
 								</span>
 							</div>
 						</div>
@@ -230,7 +230,7 @@ function Home() {
 							type="button"
 							onClick={vault.exportAccounts}
 							disabled={vault.accounts.length === 0}
-							title="Export encrypted JSON backup"
+							title="Export JSON backup containing unencrypted secrets"
 						>
 							<Download className="size-4" />
 							Export
@@ -907,12 +907,11 @@ function Home() {
 			<footer className="app-footer">
 				<div className="footer-content">
 					<div className="footer-col">
-						<h4>Private Client-Side Vault</h4>
+						<h4>Stored in your browser</h4>
 						<p>
-							All TOTP calculations execute locally using the browser&rsquo;s
-							Web Cryptography API. Secrets remain stored exclusively in your
-							local browser vault and are never transmitted to any external
-							server.
+							Codes are calculated locally with the Web Crypto API. Saved
+							secrets and JSON backups are not encrypted. Use a trusted device
+							and protect your backup files.
 						</p>
 					</div>
 					<div className="footer-col">
@@ -937,7 +936,9 @@ function Home() {
 						<div className="footer-meta">
 							<span>RFC 6238 TOTP Standard</span>
 							<span>SHA-1 / SHA-256 / SHA-512</span>
-							<span>Encrypted JSON export</span>
+							<a href="https://github.com/afwaniridho/2fa-manager">
+								View source on GitHub
+							</a>
 						</div>
 					</div>
 				</div>
